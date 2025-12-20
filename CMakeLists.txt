@@ -14,4 +14,5 @@ target_include_directories(project_lib PUBLIC include)
 add_executable(homesensors homesensors.cpp)
 target_link_libraries(project_lib PRIVATE PkgConfig::GPIODCXX)
 target_link_libraries(homesensors PRIVATE project_lib)
-# install(TARGETS helloworld DESTINATION bin)
+
+install(TARGETS homesensors DESTINATION bin)
