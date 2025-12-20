@@ -6,11 +6,22 @@ GpioController::GpioController(gpiod::chip const &chip) : chip{chip} {}
 
 int GpioController::setup(int8_t pin, bool isInput) {
   line = chip.get_line(pin);
-  if (!line || line.is_requested() || line.is_used()) {
+  if (!line) {
     return -1;
+  } else if (line.is_used()) {
+    return -2;
   }
 
-  isInput ? line.set_direction_input() : line.set_direction_output();
+  gpiod::line_request request;
+  request.consumer = "homesensors-app";
+
+  if (isInput) {
+    request.request_type = gpiod::line_request::DIRECTION_INPUT;
+  } else {
+    request.request_type = gpiod::line_request::DIRECTION_OUTPUT;
+  }
+  line.request(request);
+
   return 0;
 }
 
